@@ -55,7 +55,7 @@ span{
     height: 50px;
 }
 /*ここから記事一覧用*/
-.ichiram:hover{
-    background-color:#fff;
+.ichiram a:hover{
+    background-color:#fcfcfc;
         
 }
