@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>hamablo</title>
+    <link rel="stylesheet" href="my_page.css">
+</head>
+<body>
+    <header>
+<div class="header-logo">
+
+    <h1>はまぶろ</h1>
+    <p>このブログは、僕の家族や友人に向けて書くIT知識向上プログラムです。
+    </p>
+</div>
+<div class="header-list">
+    <ul>
+        <li><a href="home.html">HOME</a></li>
+        <li><a href="kiji.html">記事一覧</a></li>
+        <li><a href="prof.html">プロフィール</a></li>
+
+    </ul>
+    
+</div>
+
+    </header>
+<div class="title">
+<h3><!--ブログのタイトル-->
+PHP foreach　合計金額の出しかた
+
+</h3>
+</div>
+<div class="naiyou">
+<p><!--本文-->
+配列の中の合計金額を出して見ましょう。<br>
+<br>
+$prices = array(1000,650,750,800);<br>
+この連想配列を使います。<br>
+<br>
+foreachで回します<br>
+まず<br>
+トータル金額をいれるとこを作っときます<br>
+$totalPrice = 0;<br>
+で、ここにforeachで一つずつ足していきます。<br>
+foreach($prices as $price){<br>
+    $totalPrice += $price;<br>
+}<br>
+表示させるには<br>
+echo '合計金額は'.$totalPrice.'円です';<br>
+<br>
+こんな感じで変数展開します。<br>
+<br>
+。。。なかなか理解しにくいですよね。<br>
+<br>
+もう一個いきますw<br>
+<br>
+では、この中の最高金額を検出して見ましょう！！！<br>
+<br>
+やるよ！！！<br>
+<br>
+先ほどの配列<br>
+$price = array(1000,650,750,800);<br>
+を使いまして。。。<br>
+<br>
+どうやると思います？<br>
+<br>
+はい！<br>
+<br>
+まず入れ物を作ります。<br>
+$maxPrice = 0;<br>
+んで一個一個比較して入れていきます。<br>
+そう！<br>
+if文！<br>
+さっきにforeachと組み合わせて<br>
+foreach ($prices as $price){<br>
+    if($price > $maxPrice){<br>
+        $maxPrice = $price;<br>
+    }<br>
+}<br>
+ね？<br>
+<br>
+で表示させるには<br>
+<br>
+echo ’最高金額は’.$maxPrice.'円です';<br>
+<br>
+はい。本日は以上です。<br>
+<br>
+頑張った！<br>
+<br>
+また明日！<br>
+<br>
+早くブログ更新フォーム作って楽したい（涙
+
+
+
+
+
+
+
+
+
+
+</p>
+
+
+</div>
+
+    <footer>
+        <div class="orei">
+            <p>最後まで読んでいただきまして <br> 
+                
+            本当にありがとうございます。</p>
+            <p>またよろしくお願いします。</p>
+        </div>
+        <div class="copy-light">
+        <span>©︎ ハマブロ.inc</span>  
+
+        </div>
+
+
+
+    </footer>
+
+
+
+    
+</body>
+</html>
