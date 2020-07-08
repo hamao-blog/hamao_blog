@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>hamablo</title>
+    <link rel="stylesheet" href="my_page.css">
+</head>
+<body>
+    <header>
+<div class="header-logo">
+
+    <h1>はまぶろ</h1>
+    <p>このブログは、僕の家族や友人に向けて書くIT知識向上プログラムです。
+    </p>
+</div>
+<div class="header-list">
+    <ul>
+        <li><a href="home.html">HOME</a></li>
+        <li><a href="kiji.html">記事一覧</a></li>
+        <li><a href="prof.html">プロフィール</a></li>
+
+    </ul>
+    
+</div>
+
+    </header>
+<div class="title">
+<h3><!--ブログのタイトル-->
+
+    php selectタグ　
+</h3>
+</div>
+<div class="naiyou">
+<p><!--本文-->
+
+phpでselectタグを作ってみよう！！！
+
+selectってわかりますか？
+あのクルクルするやつ。。。
+
+<select name="age">
+    <option value="未選択">選択しろ！</option>
+
+</select>
+こんなやつです
+
+さあ！作っていきますよ！！！！
+
+
+まず
+
+phpで初期値と最大値をfor文で回します
+
+簡単ですね。。。
+
+いくぞ！！！！
+<?php
+for($i = 20; $i <=100; $i++){
+    echo "<option value={$i } >{$i} </option>;"
+}
+?>
+
+どうですか？
+
+ムズイっすか？
+
+とりあえずやって見たらいいと思うw
+
+今日はここまで！
+
+ではまた！
+
+
+</p>
+
+
+</div>
+
+    <footer>
+        <div class="orei">
+            <p>最後まで読んでいただきまして <br> 
+                
+            本当にありがとうございます。</p>
+            <p>またよろしくお願いします。</p>
+        </div>
+        <div class="copy-light">
+        <span>©︎ ハマブロ.inc</span>  
+
+        </div>
+
+
+
+    </footer>
+
+
+
+    
+</body>
+</html>
