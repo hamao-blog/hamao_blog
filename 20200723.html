@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>hamablo</title>
+    <link rel="stylesheet" href="my_page.css">
+</head>
+<body>
+    <header>
+<div class="header-logo">
+
+    <h1>はまぶろ</h1>
+    <p>このブログは、僕の家族や友人に向けて書くIT知識向上プログラムです。
+    </p>
+</div>
+<div class="header-list">
+    <ul>
+        <li><a href="index.html">HOME</a></li>
+        <li><a href="kiji.html">記事一覧</a></li>
+        <li><a href="prof.html">プロフィール</a></li>
+
+    </ul>
+    
+</div>
+
+    </header>
+<div class="title">
+<h3><!--ブログのタイトル-->
+
+aws 日本時間設定
+</h3>
+</div>
+<div class="naiyou">
+    <pre>
+<p><!--本文-->
+    yps１　
+    前回のtask1はハラハラドキドキ！！
+    右も左もわからない超絶初心者の僕でしたが、みなさんの助けのおかげでなんとかEXIT !!!!
+
+    このヤバみを乗り越える感じ癖になりそうですw
+
+    安心してるのも束の間、take2開始前日になってyotaroさんから追加misson
+    
+    ＃yps１「時刻をJSTにしておいてください」
+    $ date
+    2020年　2020年  7月 21日 火曜日 02:09:51 JST
+
+    ついでに
+
+    .bashrc に以下を追記してプロンプトの色を変えてみてください
+
+    export PS1='\[\033[01;36m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+
+    この感じたまらんのですよw
+    早速ググります。
+    ・・・いろんな方法があるみたいでしたが、とりあえず色を変えて見ました。
+
+    そしたら centos@~~~~の部分が綺麗な青に！！！
+    マジかっこいいっすわ
+    こーゆーの簡単にやれるのプロですもんね
+
+    からの時刻設定
+    アシスタントのあぷり子さんのキラーパスでyotaroさんのコード責めを発見
+    sudo yum install bash-completion 
+    <img src="スクリーンショット 2020-07-23 11.10.28.png" alt="1">
+    <img src="スクリーンショット 2020-07-23 11.10.36" alt="2">
+    どうやらこのコマンドは何かおパッケージをインストールするやつみたいです。
+    続きまして・・・
+    sudo vi /etc/chrony.conf
+    なんですかね。チョロニー？
+    そしたらびっくり！
+    <img src="スクリーンショット 2020-07-23 11.11.23" alt="3">
+    でました！！
+    この画面！！
+    僕なーんとなくわかりました
+
+    このviってのは何かを書き換える時に使うのです
+    んで
+    .confは設定画面のようなものの気がしてきました。
+
+    #server 0.centos.pool.ntp.org iburst
+    #server 1.centos.pool.ntp.org iburst
+    #server 2.centos.pool.ntp.org iburst
+    #server 3.centos.pool.ntp.org iburst    
+    server ntp2.jst.mfeed.ad.jp iburst
+    #は元々ついてなかったのですがつけろということ
+    一番下は追加しろ
+    このかんじほんっといいと思います。強制自主性発揮させられるw
+
+    grep -i iburst /etc/chrony.conf
+    からのこれ
+    なんでしょう。
+    grepだから何か抽出したのかな
+    何やら四行出ました。
+
+    それから今度は
+    sudo systemctl restart chronyd
+    システムctlがなんだかは今調べるべきなんでしょうがあとで調べます。
+    あ、やっぱ今調べますw
+
+    systemctlはsystemdを操作するコマンドで、サービスの起動や停止、状態確認などを行うことができる。
+    ってことはチョロニードを再起動したのね
+
+    sudo timedatectl set-timezone Asia/Tokyo
+    これはまあさっきの感じだとタイムdateを操作するコマンドっぽいから
+    アジア東京にタイムゾーン をセットしろよ！
+    ってことでしょう。間違ってたらすみません
+
+    これから
+    date
+    で日本時間が表示されればOK!
+
+    まちがいナイトプール〜
+    EXITでした！！
+
+
+
+
+
+
+
+
+
+
+</p></pre>
+
+
+</div>
+
+    <footer>
+        <div class="orei">
+            <p>最後まで読んでいただきまして <br> 
+                
+            本当にありがとうございます。</p>
+            <p>またよろしくお願いします。</p>
+        </div>
+        <div class="copy-light">
+        <span>©︎ ハマブロ.inc</span>  
+
+        </div>
+
+
+
+    </footer>
+
+
+
+    
+</body>
+</html>
