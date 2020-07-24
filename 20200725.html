@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>hamablo</title>
+    <link rel="stylesheet" href="my_page.css">
+</head>
+<body>
+    <header>
+<div class="header-logo">
+
+    <h1>はまぶろ</h1>
+    <p>このブログは、僕の家族や友人に向けて書くIT知識向上プログラムです。
+    </p>
+</div>
+<div class="header-list">
+    <ul>
+        <li><a href="index.html">HOME</a></li>
+        <li><a href="kiji.html">記事一覧</a></li>
+        <li><a href="prof.html">プロフィール</a></li>
+
+    </ul>
+    
+</div>
+
+    </header>
+<div class="title">
+<h3><!--ブログのタイトル-->
+yps task2!
+
+</h3>
+</div>
+<div class="naiyou">
+    <pre>
+<p><!--本文-->
+
+待ってました！task2!
+今回も濃いい内容ですのでどんどんいきます！
+
+まずはmysql5.7 のインストール
+
+ターミナルでEC2にログイン
+whoami でcentos確認
+sudo yum locelinstall http://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm
+なんか聞かれたらyをおす
+yum install -y mysql -community-serbver
+このyumってのはパッケージ
+はい、んで
+mysqld --versionと打って
+mysqld Ver 5.7.31 for Linux on x86_64(MySQL Community Server(GPL))
+が表示されればOK.このMySQLの最後のdを忘れてエラー出たなぁ
+自動起動設定をします。（便利だから）
+sudo systemctl enable mysqld
+sudo systemctl start mysqld
+sudo systemctl status mysqld
+sudo systemctl stop mysqld
+エラーが出ない事を確認
+この何回も出てくるsystemctlってのは調べたらサービスの起動や停止、起動設定の変更と状態確認をするやつ
+ってことは、enableは自動起動有効。startは起動。statusはステータス表示。stopは・・・停止かな？
+初期パスワードを取得：
+mysql5.7以降では初回起動時に自動生成されている
+ログの中にあるから探す
+sudo cat /var/log/mysql.log | grep -i root
+このコードが何を意味視しているのかなんとなくですがわかるような気がするw
+んで表示されたなかに
+root@localhost:
+の先が初期パスワード
+sudo systemctl start mysqld　で起動して
+mysql -u root -p を打って初期パスワードを入力
+プロンプトがmysqlに変わればOK！
+初期パスワードを変更します
+SET PASSWORD = PASSWORD('XXXXXXXX')
+８文字以上、英大文字、小文字、数字、記号をまぜまぜ
+設定終わったらexitでMySQLから抜けます
+
+ファイル編集
+sudo vi /etc/my.cnf
+vi画面で以下を追記します
+character-set-server=utf8mb4
+
+[client]
+default-character-set=utf8mb4
+escんでwrite,quite
+
+mysql再起動
+sudo systemctl restart mysqld
+mysqlにログイン
+mysql -u root -p
+ログインして
+show variables like "chara%";
+utf8mb4が表示されてればOK
+
+exitでぬける
+
+MySQLのインストール完了！
+
+続きまして、Nginx
+エンジンエックスとよむ、webサーバー用のソフトウェア、似たようなやつにapacheがある。
+違いは・・・・調べましょう。あとでね
+
+sudo vi /etc/yum.repos.d/nginx.repo
+開いたファイルに以下、追記(リポジトリファイル？)
+[nginx]
+name=nginx repo
+baseurl=https://nginx.org/packages/centos/$releasever/$basearch/
+gpgcheck=0
+enable=1
+write quiteして
+sudo yum install nginx -y
+nginx -v　でバージョン確認
+nginx version:nginx/1.18.0　を確認
+
+今度はnginxの自動起動設定
+sudo systemctl enable nginx
+
+そしたらブラウザでAWSのセキュリティーグループのインバウンドルール、ポート番号をいれるとこを開いて
+ルールの追加
+httpとhttpsを追加した保存。
+
+ターミナルに戻って
+sudo systemctl start nginx でnginxを起動
+これでブラウザからアクセスできるようになります。
+URLはAWSのパブリック　DNS(IPv４)にあるやつ
+Welcome to nginx!
+と表示されてればOK
+続きまして
+sudo mkdir /var/www
+sudo mkdir /var/www/html
+sudo chown -R centos:nginx /var/www
+
+設定ファイル編集します
+sudo cp /etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf.org
+sudo vi /etc/nginx/conf.d/default.conf
+vi画面で
+server_name はAWSのURL(ec2から始まる)
+＃root /usr／share／nginx/html;
+を
+＃外して
+root /var/www/html;
+に変更
+nginxを再起動
+sudo systemctl restart nginx
+
+ブラウザでリロードして４０３エラーが表示されてればOK
+
+次はphpのインストールですが次回にします^^
+
+
+
+</p></pre>
+
+
+</div>
+
+    <footer>
+        <div class="orei">
+            <p>最後まで読んでいただきまして <br> 
+                
+            本当にありがとうございます。</p>
+            <p>またよろしくお願いします。</p>
+        </div>
+        <div class="copy-light">
+        <span>©︎ ハマブロ.inc</span>  
+
+        </div>
+
+
+
+    </footer>
+
+
+
+    
+</body>
+</html>
