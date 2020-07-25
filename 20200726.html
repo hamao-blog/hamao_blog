@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>hamablo</title>
+    <link rel="stylesheet" href="my_page.css">
+</head>
+<body>
+    <header>
+<div class="header-logo">
+
+    <h1>はまぶろ</h1>
+    <p>このブログは、僕の家族や友人に向けて書くIT知識向上プログラムです。
+    </p>
+</div>
+<div class="header-list">
+    <ul>
+        <li><a href="index.html">HOME</a></li>
+        <li><a href="kiji.html">記事一覧</a></li>
+        <li><a href="prof.html">プロフィール</a></li>
+
+    </ul>
+    
+</div>
+
+    </header>
+<div class="title">
+<h3><!--ブログのタイトル-->
+
+yps task2 phpなど
+</h3>
+</div>
+<div class="naiyou">
+    <pre>
+<p><!--本文-->
+
+PHP7.3のインストールです
+sudo yum install epel-relese
+sudo yum update
+sudo yum -y install --enablerepo=epal,remi,remi-php73 php php-devel php-mbstring php-pdo php-gd php-xml php-mcrypt php-fpm php-mysql php-mysqlnd
+
+php-v で　PHP 7.3.20　が表示されればOK
+
+ファイル編集します
+sudo cp /etc/php-fpm.d/www.conf /etc/php-fpm.d/www.conf.org
+sudo vi /etc/php-fpm.d/www.conf
+
+で
+
+user = nginx
+group = nginx
+↓ここも変更
+listen = /var/run/php-fpm/php-fpm.sock
+listen.owner = nginx
+listen.group = nginx
+listen.mode = 0660
+
+;←これはコメントアウト
+
+んで保存して
+
+sudo vi /etc/nginx/conf.d/default.conf
+
+index.phpを追加
+
+index index.php　index.html index.htm;
+↑このしたに
+try_files $uri $uri/ /index.php?$query_string;
+を追加
+
+#error_page 404       /404.html;　←の上に
+
+location ~ \.php$ {
+    root /var/www/html;
+    fastcgi_pass   unix:/var/run/php-fpm/php-fpm.sock;
+    fastcgi_index  index.php;
+    fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+    include        fastcgi_params;
+}
+
+これ追加。
+んで
+sudo systemctl restart nginx
+sudo systemctl enable php-fpm
+sudo systemctl start php-fpm
+sudo chown -R centos:nginx /var/www/
+
+以下のファイルを作成
+vi var/www/html/index.php
+中にこれを記載
+<?php
+echo phpinfo();
+?>
+:wqで戻って
+sudo systemctl restart nginx
+sudo systemctl restart php-fpm
+これを打ってブラウザ（ec2~)にアクセスするとphpのinfoが表示されてるはず
+phpは以上
+
+続きまして、Laravelのインストール
+cp /tmp
+php -r"copy('https://getcomposer.org/installer','composer-setup.php');"
+php composer-setup.php
+php -r"unlink('composer-setup.php');"
+sudo mv composer.phar /usr/local/bin/composer
+sudo chmod +x /usr/local/bin/composer
+sudo yum install zip unzip -y
+
+cd /var/www/html
+composer create-poroject --prefer-dist laravel yps
+
+cd yps
+cp -p .env.example .env
+php artisan key:generate
+vi .env
+
+APP_URL=ブラウザのUrl(ec2~)
+DB _PASSWORD="xxxxxxxx"←これは初期パスワードから変更したやつ
+:wqで終了
+
+sudo yum install npm node -y
+composer install
+npm install
+sudo chown -R centos:nginx /var/www/
+sudo chmod -R 777 storage /bootstrap/cache/
+
+vi /etc/nginx/conf.d/default.conf
+で
+/var/www/html; を　/var/www/html/yps/public; に変更
+sudo systemctl restart nginx
+sudo systemctl restart php-fpm
+ブラウザをリロードすれば完了！
+
+vi resources/views/welcome.blade.php
+これをいじれば編集可能
+
+これをVSCodeから編集できるようにします
+
+VSCodeのプラグインでRemote-sshをインストール
+左のテレビ画面みたいなやつを選択
+設定の歯車をおす
+/user/ユーザーネーム（自分）.ssh/comfig
+中に
+Host yps
+HostName xx.xxx.xxx.xx(centosのIPアドレス)
+User centos
+Port 55055
+IdentityFile ~/.ssh/xxx.pem
+保存忘れずに
+これでできるはず！！
+
+task2は以上です
+
+ではまた！
+
+
+
+</p></pre>
+
+
+</div>
+
+    <footer>
+        <div class="orei">
+            <p>最後まで読んでいただきまして <br> 
+                
+            本当にありがとうございます。</p>
+            <p>またよろしくお願いします。</p>
+        </div>
+        <div class="copy-light">
+        <span>©︎ ハマブロ.inc</span>  
+
+        </div>
+
+
+
+    </footer>
+
+
+
+    
+</body>
+</html>
