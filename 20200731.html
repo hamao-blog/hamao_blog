@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>hamablo</title>
+    <link rel="stylesheet" href="my_page.css">
+</head>
+<body>
+    <header>
+<div class="header-logo">
+
+    <h1>はまぶろ</h1>
+    <p>このブログは、僕の家族や友人に向けて書くIT知識向上プログラムです。
+    </p>
+</div>
+<div class="header-list">
+    <ul>
+        <li><a href="index.html">HOME</a></li>
+        <li><a href="kiji.html">記事一覧</a></li>
+        <li><a href="prof.html">プロフィール</a></li>
+
+    </ul>
+    
+</div>
+
+    </header>
+<div class="title">
+<h3><!--ブログのタイトル-->
+yps　特別講義！！
+
+
+</h3>
+</div>
+<div class="naiyou">
+    <pre>
+<p><!--本文-->
+
+まさかの特別講義w
+最高です。
+内容はMySQLにデータを入れます！
+
+cd /tmp←チェンジディレクトリ
+sudo yum install wget←wgetとは直で後につづくURLをダウンロードするかんじ
+wget http://tech.pjin.jp/wp-content/uploads/2016/04/worldcup2014.zip
+unzip worldcup2014.zip←おそらくunzipは解凍
+ls -la worldcup2014.sql←　lsのオプションの-laは謎
+mysql -u root -p ←mysqlにログイン
+create database 
+worldcup2014db;
+use worldcup2014db;
+source ./worldcup2014.sql;
+mysql>show tables;　←テーブルを参照
++--------------------------+
+| Tables_in_worldcup2014db |
++--------------------------+
+| countries                |
+| goals                    |
+| goals_tmp                |
+| pairings                 |
+| pairings_tmp             |
+| players                  |
+| players_tmp              |
++--------------------------+
+exit←抜けます
+
+cd /var/www/html/yps/　←チェンジディレクトリー
+vi .env　←.envを編集
+DB_DATABASE=worldcup2014db←に変更
+php artisan make:command 
+TestCommand ←これを実行すると　app/Console/Commands内に新しいファイルが作成されます。
+ls -la app/Console/Commands/　←これで確認
+TestCommand.php　←できてるよってこと
+php artisan make:model Models/Player 　←新しくモデルを作成するコマンド。モデルとはw 調べました。モデルはコントローラとデータベースの仲介を行い、必要なデータをコントローラに渡す。
+コントローラはそれを元にビューを作成する。そしてクライアントは、ブラウザ上でそのデータを見ることができる。
+・・・半分くらいわかった気がする
+
+ls -la app/Models/Player.php 
+ここからVSCodeで編集
+yps/app/Console/Commands/TestCommand.php←を編集
+------------------------------------------------------
+
+<?php
+
+namespace App\Console\Commands;
+
+use Illuminate\Console\Command;
+use App\Models\Player;
+
+class TestCommand extends Command
+{
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'test_command';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Test Command';
+
+    /**
+     * Create a new command instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    /**
+     * Execute the console command.
+     *
+     * @return int
+     */
+    public function handle()
+    {
+        $players = Player::get();
+        foreach($players as $player) {
+            echo $player->name."\n";
+        }
+        return 0;
+    }
+}
+
+php artisan config:clear
+php artisan test_command
+これでworldcup2014dbのplayersテーブルのnameフィールドが表示される
+簡単なDB接続バッチらしい
+
+php artisan test_command | head
+
+ ジュリオセザール         
+ ジェフェルソン         
+ ビクトル               
+ マイコン               
+ マックスウェル         
+ アウベス               
+ ダンチ                 
+ チアゴシウバ           
+ エンリケ               
+ ダビドルイス    
+
+ と表示される
+
+ 何やってるか理解できるようになるには時間がかかるけど
+ たのしいw
+
+ ではまた！
+
+
+
+
+
+
+
+
+</p></pre>
+
+
+</div>
+
+    <footer>
+        <div class="orei">
+            <p>最後まで読んでいただきまして <br> 
+                
+            本当にありがとうございます。</p>
+            <p>またよろしくお願いします。</p>
+        </div>
+        <div class="copy-light">
+        <span>©︎ ハマブロ.inc</span>  
+
+        </div>
+
+
+
+    </footer>
+
+
+
+    
+</body>
+</html>
