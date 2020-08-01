@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>hamablo</title>
+    <link rel="stylesheet" href="my_page.css">
+</head>
+<body>
+    <header>
+<div class="header-logo">
+
+    <h1>はまぶろ</h1>
+    <p>このブログは、僕の家族や友人に向けて書くIT知識向上プログラムです。
+    </p>
+</div>
+<div class="header-list">
+    <ul>
+        <li><a href="index.html">HOME</a></li>
+        <li><a href="kiji.html">記事一覧</a></li>
+        <li><a href="prof.html">プロフィール</a></li>
+
+    </ul>
+    
+</div>
+
+    </header>
+<div class="title">
+<h3><!--ブログのタイトル-->
+yps　task3 php.ini設定　Github 
+
+</h3>
+</div>
+<div class="naiyou">
+    <pre>
+<p><!--本文-->
+
+さあ、待ちに待ったyps　TASK3
+今回も派手な内容となっております。
+が、この教え方は非常に良いと思っています。
+一回走り抜けてから、もっかいじっくり考える。最高。
+ではいきましょう。
+復習で特記したかったのはsqlの実行ファイル的なやつ
+cd /var/tmp
+vi get_players.sql ←この中身を実行する。まさにプログラミング！
+中に
+use worldcup2014db
+select * from players where name ='酒井';
+保存して
+ターミナルで
+mysql -u root -p < ./get_players.sql 
+で表示されるんです。２人の酒井さんがw
+まあ、これはあんま使わないらしいです。
+
+ はい、ではphp.iniの設定です
+
+バックアップファイルを作り
+sudo cp /etc/php.ini /etc/php.ini.org
+編集
+sudo vi /etc/php.ini
+
+コピペします
+--- /etc/php.ini.org	2020-07-07 18:04:58.000000000 +0900
++++ /etc/php.ini	2020-07-31 23:28:50.392713681 +0900
+@@ -373,7 +373,7 @@
+ ; threat in any way, but it makes it possible to determine whether you use PHP
+ ; on your server or not.
+ ; http://php.net/expose-php
+-expose_php = On
++expose_php = Off
+ 
+ ;;;;;;;;;;;;;;;;;;;
+ ; Resource Limits ;
+@@ -690,7 +690,7 @@
+ ; Its value may be 0 to disable the limit. It is ignored if POST data reading
+ ; is disabled through enable_post_data_reading.
+ ; http://php.net/post-max-size
+-post_max_size = 8M
++post_max_size = 128M
+ 
+ ; Automatically add files before PHP document.
+ ; http://php.net/auto-prepend-file
+@@ -842,7 +842,7 @@
+ 
+ ; Maximum allowed size for uploaded files.
+ ; http://php.net/upload-max-filesize
+-upload_max_filesize = 2M
++upload_max_filesize = 128M
+ 
+ ; Maximum number of files that can be uploaded via a single request
+ max_file_uploads = 20
+@@ -919,7 +919,7 @@
+ [Date]
+ ; Defines the default timezone used by the date functions
+ ; http://php.net/date.timezone
+-;date.timezone =
++date.timezone = Asia/Tokyo
+ 
+ ; http://php.net/date.default-latitude
+ ;date.default_latitude = 31.7667
+@@ -1533,7 +1533,7 @@
+ ; language for internal character representation.
+ ; This affects mb_send_mail() and mbstring.detect_order.
+ ; http://php.net/mbstring.language
+-;mbstring.language = Japanese
++mbstring.language = Japanese
+ 
+ ; Use of this INI entry is deprecated, use global internal_encoding instead.
+ ; internal/script encoding.
+@@ -1571,7 +1571,7 @@
+ ; automatic encoding detection order.
+ ; "auto" detect order is changed according to mbstring.language
+ ; http://php.net/mbstring.detect-order
+-;mbstring.detect_order = auto
++mbstring.detect_order = auto
+ 
+ ; substitute_character used when character cannot be converted
+ ; one from another
+
+ 終わったら
+ sudo systemctl restart php-fpm
+ sudo systemctl restart nginx
+ 再起動ですね
+
+ そしたらphpのエラーログの設定です。
+またphp.iniの編集です
+sudo vi /etc/php.ini
+コピペします。
+--- /etc/php.ini.org	2020-07-07 18:04:58.000000000 +0900
++++ /etc/php.ini	2020-08-01 01:02:55.357913512 +0900
+@@ -373,7 +373,7 @@
+ ; threat in any way, but it makes it possible to determine whether you use PHP
+ ; on your server or not.
+ ; http://php.net/expose-php
+-expose_php = On
++expose_php = Off
+ 
+ ;;;;;;;;;;;;;;;;;;;
+ ; Resource Limits ;
+@@ -584,6 +584,7 @@
+ ; http://php.net/error-log
+ ; Example:
+ ;error_log = php_errors.log
++error_log = "/var/log/php_errors.log"
+ ; Log errors to syslog (Event Log on Windows).
+ ;error_log = syslog
+ 
+@@ -690,7 +691,7 @@
+ ; Its value may be 0 to disable the limit. It is ignored if POST data reading
+ ; is disabled through enable_post_data_reading.
+ ; http://php.net/post-max-size
+-post_max_size = 8M
++post_max_size = 128M
+ 
+ ; Automatically add files before PHP document.
+ ; http://php.net/auto-prepend-file
+@@ -842,7 +843,7 @@
+ 
+ ; Maximum allowed size for uploaded files.
+ ; http://php.net/upload-max-filesize
+-upload_max_filesize = 2M
++upload_max_filesize = 128M
+ 
+ ; Maximum number of files that can be uploaded via a single request
+ max_file_uploads = 20
+@@ -919,7 +920,7 @@
+ [Date]
+ ; Defines the default timezone used by the date functions
+ ; http://php.net/date.timezone
+-;date.timezone =
++date.timezone = Asia/Tokyo
+ 
+ ; http://php.net/date.default-latitude
+ ;date.default_latitude = 31.7667
+@@ -1533,7 +1534,7 @@
+ ; language for internal character representation.
+ ; This affects mb_send_mail() and mbstring.detect_order.
+ ; http://php.net/mbstring.language
+-;mbstring.language = Japanese
++mbstring.language = Japanese
+ 
+ ; Use of this INI entry is deprecated, use global internal_encoding instead.
+ ; internal/script encoding.
+@@ -1571,7 +1572,7 @@
+ ; automatic encoding detection order.
+ ; "auto" detect order is changed according to mbstring.language
+ ; http://php.net/mbstring.detect-order
+-;mbstring.detect_order = auto
++mbstring.detect_order = auto
+ 
+ ; substitute_character used when character cannot be converted
+ ; one from another
+
+ んでまた再起動
+ sudo systemctl restart php-fpm
+ sudo systemctl restart nginx
+
+ 次はGit
+
+ sudo yum install git -y
+ cd /var/www/html/yps
+ git init
+
+ 次はGitHubにLaravelのソースコードをアップします
+ ブラウザでアカウントを開いて
+右にある緑のnewをおす
+Repository name にmyapp
+DescriptionにWordPressのテストあぷりだyo!
+Privateにチェック
+Add .gitignore:をLaravelに変更
+隣はNone(元々だったかな)
+みどりのCreatr repositoryを選択
+画面変わって緑のadd README.md 
+緑のCode押してUseSSHにしてgit@github~をコピー
+
+ターミナルで
+cd /var/www/html/yps/
+vi .git/config
+追記します
+[user]
+    name = hamao-blog 
+    email = xxxxxxxx@gmail.com
+[core]
+    repositoryformatversion = 0
+    filemode = true
+    bare = false
+    logallrefupdates = true
+[remote "origin"]
+    url = git@github.com:hamao-blog/myapp.git
+    fetch = +refs/heads/*:refs/remotes/origin/*
+[branch "master"]
+    remote = origin
+    merge = refs/heads/master
+
+んで秘密鍵作ります
+ssh-keygen -t rsa -b 4096 -C "XXXXXXX@gmail.com"
+この4096きになったからググったらパスの難易度とゆうか複雑さとゆうかでしたw
+そしたら　鍵ファイルの名前をつけるみたいな感じになるので
+何もかかずエンター 
+今度はパス設定になるので適当に設定。確認でもう一回。
+cat ~/.ssh/id_rsa.pub で表示された文字列を全部コピー
+GitHubに行って登録
+自分のアイコンからsetting
+SSH and GPG keys を選択
+New SSH key を選択
+タイトルは適当。keyにさっきのをペースト
+緑のAdd SSH key　をクリック
+
+ターミナルに戻って
+
+cd /var/www/html/yps/
+git add .
+git commit -am "initial"
+git push origin master 
+yes入力
+パスワード入力
+
+ソースコードの登録完了
+
+develop,feature　ブランチ切るとは
+マスターは上辺の顔、裏でこそこそテスト勉強するdevelop,featureみたいな。わかりずら
+
+最後に
+git checkout develop ←これは人格切替みたいなやつ
+git branch ←これは今の自分の確認
+
+とりあえず今回は以上です
+
+
+
+
+</p></pre>
+
+
+</div>
+
+    <footer>
+        <div class="orei">
+            <p>最後まで読んでいただきまして <br> 
+                
+            本当にありがとうございます。</p>
+            <p>またよろしくお願いします。</p>
+        </div>
+        <div class="copy-light">
+        <span>©︎ ハマブロ.inc</span>  
+
+        </div>
+
+
+
+    </footer>
+
+
+
+    
+</body>
+</html>
