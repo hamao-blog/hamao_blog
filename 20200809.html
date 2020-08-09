@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>hamablo</title>
+    <link rel="stylesheet" href="my_page.css">
+</head>
+<body>
+    <header>
+<div class="header-logo">
+
+    <h1>はまぶろ</h1>
+    <p>このブログは、僕の家族や友人に向けて書くIT知識向上プログラムです。
+    </p>
+</div>
+<div class="header-list">
+    <ul>
+        <li><a href="index.html">HOME</a></li>
+        <li><a href="kiji.html">記事一覧</a></li>
+        <li><a href="prof.html">プロフィール</a></li>
+
+    </ul>
+    
+</div>
+
+    </header>
+<div class="title">
+<h3><!--ブログのタイトル-->
+mysqlで日本語が消える件について
+
+
+</h3>
+</div>
+<div class="naiyou">
+    <pre>
+<p><!--本文-->
+
+    mysqlをいじってたら日本語が消える現象が発生したので対処を書き留めておく。
+    mysqlにログインして
+    mysql> status
+    を確認
+    utf8になってなかったら変更しましょう。
+
+    手順
+    mysqlの設定ファイルをいじる
+
+    sudo vi /etc/mysql/my.cnf
+    [client]と[mysql]の部分をコメントアウト
+    
+    [mysqld]
+    character-set-server=utf8
+    skip-character-set-client-handshake
+    default-storage-engine=INNODB
+    [mysqldump]
+    default-character-set = utf8
+
+    ↑この部分は残しておきましょう。
+    保存して再起動して試してみてね。
+
+    じゃあまた！
+
+
+
+
+
+
+
+
+
+
+</p></pre>
+
+
+</div>
+
+    <footer>
+        <div class="orei">
+            <p>最後まで読んでいただきまして <br> 
+                
+            本当にありがとうございます。</p>
+            <p>またよろしくお願いします。</p>
+        </div>
+        <div class="copy-light">
+        <span>©︎ ハマブロ.inc</span>  
+
+        </div>
+
+
+
+    </footer>
+
+
+
+    
+</body>
+</html>
