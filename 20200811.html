@@ -129,11 +129,6 @@ vi .htaccess
     order allow,deny
     deny from all
   </files>
-
-  default.confに追記↓
-  location /wp-config.php {
-    deny all;
-  }
   
   vi抜けて
   sudo chmod 606 .htaccess
@@ -141,6 +136,12 @@ vi .htaccess
   /var/www/html/yps/public;
   ↑これを↓これに変更（何個かあったような）
   root /var/www/html/wwpp;
+
+  さらに追記↓
+  location /wp-config.php {
+    deny all;
+  }
+  
   sudo systemctl restart php-fpm
   sudo systemctl restart nginx 
 
