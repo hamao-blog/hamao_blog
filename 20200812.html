@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>hamablo</title>
+    <link rel="stylesheet" href="my_page.css">
+</head>
+<body>
+    <header>
+<div class="header-logo">
+
+    <h1>はまぶろ</h1>
+    <p>このブログは、僕の家族や友人に向けて書くIT知識向上プログラムです。
+    </p>
+</div>
+<div class="header-list">
+    <ul>
+        <li><a href="index.html">HOME</a></li>
+        <li><a href="kiji.html">記事一覧</a></li>
+        <li><a href="prof.html">プロフィール</a></li>
+
+    </ul>
+    
+</div>
+
+    </header>
+<div class="title">
+<h3><!--ブログのタイトル-->
+yps　task4 wordpress セキュリティー
+
+
+</h3>
+</div>
+<div class="naiyou">
+    <pre>
+<p><!--本文-->
+
+    やってみました。
+    間違ってたらごめんなさい
+
+    簡単にできるWordPressのセキュリティ対策×12
+
+    1：WordPressで構築されていることを隠す
+
+まずEC2にログイン
+vi /var/www/html/wwpp/wp-content/themes/astrid/functions.php
+
+↓以下を追記します。
+remove_action('wp_head', 'wp_generator');// WordPressのバージョン
+remove_action('wp_head', 'wp_shortlink_wp_head');// 短縮URLのlink
+remove_action('wp_head', 'wlwmanifest_link');// ブログエディターのマニフェストファイル
+remove_action('wp_head', 'rsd_link');// 外部から編集するためのAPI
+remove_action('wp_head', 'feed_links_extra', 3);// フィードへのリンク
+remove_action('wp_head', 'print_emoji_detection_script', 7);// 絵文字に関するJavaScript
+remove_action('wp_head', 'rel_canonical');// カノニカル
+remove_action('wp_print_styles', 'print_emoji_styles');// 絵文字に関するCSS
+remove_action('admin_print_scripts', 'print_emoji_detection_script');// 絵文字に関するJavaScript
+remove_action('admin_print_styles', 'print_emoji_styles');// 絵文字に関するCSS
+
+2：WordPress及びプラグインを最新版にする
+
+これは・・・・
+気付いたらやりましょうw
+
+3：不要なプラグインを削除する
+
+これも、やりましょう。
+
+4：ログイン画面のURLを変更する
+
+これが結構大変、では解説します
+まずwordpressにログインします。
+プラグインの新規追加画面で　SiteGurad WP Plugin　をインストール、有効化します
+で、ログインページ変更を選択
+設定画面で「変更後のログインページ名」に任意のファイル名を入力（初めからなんか書いてあった）
+変更、保存。
+はい、お気づきですね？
+エラー: .htaccessの更新に失敗しました。が出ますね？
+原因はmod_rewriteというモジュール？てきなやつがないから
+が、しかし。mod_rewriteはApacheのものらしい
+わがnginxではちょっと違う
+だがしかしnginxにもrewriteがあるので安心してね
+wordpressも言ってます（https://wpdocs.osdn.jp/Nginx）
+nginxでは.htaccessは使えないらしいので/etc/nginx/conf.d/default.confに記述
+
+と思ったけど今は保留にしておきますw泥沼化しそうだったw
+
+話は変わりますが、bashのショートカットコマンドの設定をします
+
+ec2にログインして
+vi ~/.bashrc
+例えば　cd /var/www/html をhtだけで移動するエイリアスを作りますね
+なかに
+alias ht='cd /var/www/html'
+これを記述するだけ
+source ~/.bashrc
+これで再起動してやってみてください
+
+ではまた！
+
+
+</p></pre>
+
+
+</div>
+
+    <footer>
+        <div class="orei">
+            <p>最後まで読んでいただきまして <br> 
+                
+            本当にありがとうございます。</p>
+            <p>またよろしくお願いします。</p>
+        </div>
+        <div class="copy-light">
+        <span>©︎ ハマブロ.inc</span>  
+
+        </div>
+
+
+
+    </footer>
+
+
+
+    
+</body>
+</html>
