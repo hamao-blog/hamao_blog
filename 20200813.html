@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>hamablo</title>
+    <link rel="stylesheet" href="my_page.css">
+</head>
+<body>
+    <header>
+<div class="header-logo">
+
+    <h1>はまぶろ</h1>
+    <p>このブログは、僕の家族や友人に向けて書くIT知識向上プログラムです。
+    </p>
+</div>
+<div class="header-list">
+    <ul>
+        <li><a href="index.html">HOME</a></li>
+        <li><a href="kiji.html">記事一覧</a></li>
+        <li><a href="prof.html">プロフィール</a></li>
+
+    </ul>
+    
+</div>
+
+    </header>
+<div class="title">
+<h3><!--ブログのタイトル-->
+yps　JAVA 
+
+
+</h3>
+</div>
+<div class="naiyou">
+    <pre>
+<p><!--本文-->
+
+    JAVAのインストーーーーール！！！！
+    まず古いのを消す方法
+    yum list installed |grep jdk
+    sudo yum remove 見つかったjdk
+    で削除完了
+
+    OS標準のSDKをインストールします
+    SDKとは。わかりません
+    調べました。が、わかりませんでした涙
+　
+    sudo yum install java-11-openjdk -y
+    sudo yum install java-11-openjdk-devel -y
+
+    javac -version
+    javac 11.0.8 と表示されればおk
+
+    vi HelloWorld.java
+    なかに
+    public class HelloWorld{
+        public static void main(String[] args){
+            System.out.println("Hello World!");
+        }
+    }
+ 
+    javac HelloWorld.java ←これはコンパイル
+    コンパイルとは、なるほど。機械語に変換すること
+    どんなosとも会話できる通訳さんです←コンパイラー
+
+    java HelloWorld ←実行
+
+    Hello World!と出ましたね？
+
+    なんか間違ってたらコンパイルの時にエラー出ました。
+
+    はい、続きまして
+    vi .bashrc
+    export JAVA_HOME=/usr/lib/jvm/java-11-openjdk 
+    export PATH=./bin:$PATH:$JAVA_HOME/bin 
+    ↑これが何かって？
+    調べますよ！！！！！！
+    環境変数を設定してる。javaを使えるようにしてるってことかな
+    はい！
+
+    複数のバージョンを入れたい人は
+    sudo alternatives --config java
+
+    mkdir /var/tmp/dev
+    mkdir /var/tmp/dev/java 
+    ディレクトリ作ってvscodeでやると楽だそうです
+
+    ではまた！！！
+    
+
+
+
+    
+
+
+
+
+
+
+
+
+</p></pre>
+
+
+</div>
+
+    <footer>
+        <div class="orei">
+            <p>最後まで読んでいただきまして <br> 
+                
+            本当にありがとうございます。</p>
+            <p>またよろしくお願いします。</p>
+        </div>
+        <div class="copy-light">
+        <span>©︎ ハマブロ.inc</span>  
+
+        </div>
+
+
+
+    </footer>
+
+
+
+    
+</body>
+</html>
