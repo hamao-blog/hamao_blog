@@ -98,6 +98,69 @@ source ~/.bashrc
 これで再起動してやってみてください
 
 ではまた！
+と思ったけど追加ミッション！！！
+
+シェルスクリプトの作り方です
+シェルスクリプトとは。。。
+例えるなら、完璧に指示を遂行するお手伝いさん・・違うかw
+阿吽の呼吸・・・ま、いいやw
+えー、やり方としては記述しといたコマンドを短いワードでいい時短テクニックです
+
+シェルスクリプトの設定
+
+mkdir bin
+vi .bashrc
+なかに
+export PATH=./bin:$PATH ←これをかく、意味はわかりません
+source .bashrc　で再起動てきな？
+
+cd bin
+vi lstart.sh ←これはファイル名ですがこのなかにコマンドを書き込む
+なかに
+#!/bin/bash
+
+sudo systemctl start mysqld
+sudo systemctl start nginx
+sudo systemctl start php-fpm
+
+抜けて
+chmod +x lstart.sh ←これは権限の変更。chmodはチェンジモード。＋xはわかりませんw
+調べました。+xは実行可能権限の付与。他にもrは読み出し可能。wは。。。わかりますね？
+
+同じ要領でなんでも作れます。
+
+コマンドを失敗したときを考慮したいt場合は中身を
+
+#!/bin/bash
+
+sudo systemctl start mysqld &&
+sudo systemctl start nginx $$
+sudo systemctl start php-fpm
+
+です
+
+とにかく書き換えたときは
+source .bashrc
+忘れがちー！
+
+後、シンボリック・リンク
+これはファイルやディレクトリの場所にあだ名をつける感じですね
+ドラクエで行ったらルーラです
+cd ~/
+ln -s /var/www/html/yps ./yps
+ln -s /var/www/html/wwpp ./wwpp
+lnは多分リンク、-sはシンボルかな。
+パスの後にあだ名
+これで cd ./ypsだけで飛べる。最高
+
+取り消しはunlink
+
+ではまた！
+
+
+
+
+
 
 
 </p></pre>
