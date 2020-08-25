@@ -194,7 +194,7 @@ resources/view/welcome.blade.php
 app/routes/web.php
 
 コピペね
-
+<code>
 <?php
 
 use Illuminate\Support\Facades\Route;
@@ -215,7 +215,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 */
-
+</code>
 Route::get('/', 'WelcomeController@index');
 Route::resource('players', 'PlayerController');
 Route::resource('countries', 'CountryController');
@@ -250,6 +250,7 @@ sudo chown -R centos:nginx /var/www/html/yps
 
 エラーが出てlogを出力したかったら
 welcomeController.phpに
+<code>
 <?php
 
 namespace App\Http\Controllers;
@@ -281,7 +282,7 @@ class WelcomeController extends Controller
         }
     }
 }
-
+</code>
 composer require laravel/ui
 php artisan ui bootstrap
 npm install && npm run dev←ここでエラー出た
@@ -295,7 +296,7 @@ sudo yum install nodejs -y
 後みんな優しい！！！
 
 
-</code>
+
 </p></pre>
 </div>
 
