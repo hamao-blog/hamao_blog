@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>hamablo</title>
+    <link rel="stylesheet" href="my_page.css">
+</head>
+<body>
+    <header>
+<div class="header-logo">
+
+    <h1>はまぶろ</h1>
+    <p>このブログは、僕の家族や友人に向けて書くIT知識向上プログラムです。
+    </p>
+</div>
+<div class="header-list">
+    <ul>
+        <li><a href="index.html">HOME</a></li>
+        <li><a href="kiji.html">記事一覧</a></li>
+        <li><a href="prof.html">プロフィール</a></li>
+
+    </ul>
+    
+</div>
+
+    </header>
+<div class="title">
+<h3><!--ブログのタイトル-->
+yps　Laravel 表示
+
+
+</h3>
+</div>
+<div class="naiyou">
+    <pre>
+<p><!--本文-->
+言っときますが今回は簡単じゃない
+はい、行きますよーーーーーーーー！！！！
+
+やることはLaravelでworldcup2014dbの選手一覧表示
+まずいきなり意味不ワード「mysqldump]
+これはmysqlにあるテーブル構成などをファイルに保存する感じかな！！！
+cd /var/www/html/yps　このディレクトリで
+mkdir resources/sql/ Laravelのresourcesのなかにsqlディレクトリを作成
+そのなかに入れます
+mysqldump -u root -p -d worldcup2014db > resources/sql/worldcup2014db.sql
+注目はlaravelのresourcesのなかのSQLの中にダンプしたってこと
+続いてチェック
+$ grep -i 'create table' resources/sql/worldcup2014db.sql
+↓これがでる
+CREATE TABLE `countries` (
+CREATE TABLE `goals` (
+CREATE TABLE `goals_tmp` (
+CREATE TABLE `pairings` (
+CREATE TABLE `pairings_tmp` (
+CREATE TABLE `players` (
+CREATE TABLE `players_tmp` (
+
+んでcountriesとgoalsとplayersとpairingsに追記
+
+vi resources/sql/worldcup2014db.sql
+
+CREATE TABLE `countries` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) DEFAULT NULL,
+  `ranking` int(11) DEFAULT NULL,
+  `group_name` varchar(1) DEFAULT NULL,
+  ↓こっから
+  `expired_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  ↑ここまで
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+４つのテーブルでね
+
+これは何してるかってーと
+既存のテーブル構成を書き換えてます。一回バラしてる感じです。
+mysqlにログイン
+worldcup2014dbを消します
+drop database worldcup2014db;
+消してすぐ中身すっからかんのworldcup2014dbを作ります
+create database worldcup2014db;
+use worldcup2014db;
+さっき構成変更したやつを流し込みます
+source resources/sql/worldcup2014db.sql;
+show table;←これでチェック
+
+＃task3でやったworldcup2014をダウンロード、解凍します
+
+cd /tmp
+sudo yum install wget unzip -y
+wget tech.pjin.jp/wp-content/upl…
+unzip worldcup2014.zip
+ls -la worldcup2014.sql
+
+で、この中身だけ抽出したい
+テーブル構成はできてる
+tmpの方のテーブルをまるっと削除しちゃいます
+vi /tmp/worldcup2014.sql 
+
+↓こっから
+-- 
+-- テーブルの構造 `countries`
+-- 
+   
+CREATE TABLE `countries` (
+  `id` int(11) NOT NULL,
+  `name` varchar(50) DEFAULT NULL,
+  `ranking` int(11) DEFAULT NULL,
+  `group_name` varchar(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+↑ここまで
+
+んで　cd-でypsのディレクトリに戻って
+テーブル構成を削除した方を流し込みます
+source /tmp/worldcup2014.sql
+何個かwarning出るけどテーブル構成を削除してないとこだからシカトでおk
+
+データが入ってるかどうか確認します
+mysql> select count(*) from countries;
++----------+
+| count(*) |
++----------+
+|       32 |
++----------+
+
+mysql> select count(*) from goals;
++----------+
+| count(*) |
++----------+
+|      188 |
++----------+
+
+mysql> select count(*) from pairings;
++----------+
+| count(*) |
++----------+
+|      144 |
++----------+
+
+mysql> select count(*) from players;
++----------+
+| count(*) |
++----------+
+|      736 |
++----------+
+以上でデータ完成
+
+続いてモデルの作成
+既存のモデルクラスは削除
+rm app/Model/Player.php
+モデル作ります
+php artisan make:model Models/Country -m
+php artisan make:model Models/Goal -m
+php artisan make:model Models/Pairing -m
+php artisan make:model Models/Player -m
+この-m は -m, --migrationオプションでCreate a new migration file for the model
+マイクレーションも一緒に作るんですね
+テーブル名が複数形でモデルクラスが単数形なら自動で紐付きます
+が、念のために明示します。
+//
+    protected $table = "players";
+    protected $dates = ["expired_at", "deleted_at", "updated_at", "created_at"];
+
+４つともね。
+　続きましてコントローラー
+php artisan make:controller CountryController --resource --model=Models/Country
+php artisan make:controller GoalController --resource --model=Models/Goal
+php artisan make:controller PairingController --resource --model=Models/Pairing
+php artisan make:controller PlayerController --resource --model= Models/Player
+php artisan make:controller WelcomeController --resource
+
+この--resourceと--model=Models/Playerは
+-r, --resource         Generate a resource controller class.
+-m, --model[=MODEL]    Generate a resource controller for the given model.
+リソースとは、何かの源って意味らしい
+
+db→Model→Controller→view
+resources/view/welcome.blade.php
+の中身を全消し
+↓コピペ 見えるかな　見えなかったら<a href="https://github.com/yotaro-ok/myapp/blob/develop/resources/views/welcome.blade.php">こちらへ</a>
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+    <head>
+        <title>yotaro prg</title>
+
+        <!-- Fonts -->
+        <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
+
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="">
+        <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+        <meta name="generator" content="Jekyll v4.1.1">
+    
+        <!-- Bootstrap core CSS -->
+        <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+        <!-- Favicons -->
+        <link rel="apple-touch-icon" href="/yotaro.jpg" sizes="180x180">
+        <link rel="icon" href="/yotaro.jpg" sizes="32x32" type="image/jpg">
+        <link rel="icon" href="/yotaro.jpg" sizes="16x16" type="image/jpg">
+        <?php /*
+        <link rel="manifest" href="/docs/4.5/assets/img/favicons/manifest.json">
+        <link rel="mask-icon" href="/docs/4.5/assets/img/favicons/safari-pinned-tab.svg" color="#563d7c">
+        */ ?>
+        <link rel="icon" href="/yotaro.jpg">
+        <meta name="theme-color" content="#563d7c">
+        <style>
+            body {
+                padding-top: 5rem;
+            }
+            .starter-template {
+                padding: 3rem 1.5rem;
+                text-align: center;
+            }
+            .bd-placeholder-img {
+                font-size: 1.125rem;
+                text-anchor: middle;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+            }
+            @media (min-width: 768px) {
+                .bd-placeholder-img-lg {
+                    font-size: 3.5rem;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+            <a class="navbar-brand" href="#">Navbar</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">Home 
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Link</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
+                        <div class="dropdown-menu" aria-labelledby="dropdown01">
+                            <a class="dropdown-item" href="#">Action</a>
+                            <a class="dropdown-item" href="#">Another action</a>
+                            <a class="dropdown-item" href="#">Something else here</a>
+                        </div>
+                    </li>
+                </ul>
+                <form class="form-inline my-2 my-lg-0">
+                    <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+                </form>
+            </div>
+        </nav>
+        <main role="main" class="container">
+                <h1>WorldCup 2014 選手一覧</h1>
+                </br>
+                <table class="table table-striped table-hover table-sm table-responsive-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">country</th>
+                            <th scope="col">uniform_num</th>
+                            <th scope="col">position</th>
+                            <th scope="col">name</th>
+                            <th scope="col">club</th>
+                            <th scope="col">birth</th>
+                            <th scope="col">height</th>
+                            <th scope="col">weight</th>
+                            <th scope="col">total_goals</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($players as $player)
+                        <tr>
+                            <td>{{ $player->id }}</td>
+                            <td>{{ $player->c_name }}</td>
+                            <td>{{ $player->uniform_num }}</td>
+                            <td>{{ $player->position }}</td>
+                            <td>{{ $player->name }}</td>
+                            <td>{{ $player->club }}</td>
+                            <td>{{ $player->birth }}</td>
+                            <td>{{ $player->height }}</td>
+                            <td>{{ $player->weight }}</td>
+                            <td>{{ $player->t_goals }}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+                <div class="row justify-content-end">
+                    {{ $players->links() }}
+                </div>
+        </main>
+        <!-- /.container -->
+        <script src="{{ asset('js/app.js') }}"></script>
+    </body>
+</html>
+</p></pre>
+
+
+
+
+あとルーター
+app/routes/web.php
+
+コピペね
+
+<?php
+
+use Illuminate\Support\Facades\Route;
+
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Now create something great!
+|
+*/
+
+/*
+Route::get('/', function () {
+    return view('welcome');
+});
+*/
+
+Route::get('/', 'WelcomeController@index');
+Route::resource('players', 'PlayerController');
+Route::resource('countries', 'CountryController');
+Route::resource('goals', 'GoalController');
+Route::resource('pairings', 'PairingController');
+クラス追加したり、ルーター変更したら、これ👇やろう
+
+php artisan cache:clear && php artisan config:clear && php artisan route:clear && php artisan view:clear
+composer clear-cache && composer dump-autoload --optimize
+sudo chown -R centos:nginx /var/www/html/yps
+
+ここまでがやり方です
+こっからが自走
+
+ヒントは
+①テーブルビューを１つ追加(total_goals)
+　②functionを１つ追加
+　③controllerからviewに変数渡し
+
+正直意味不
+やりましょう
+まず、mysqlにviewを作ります
+mysqlにログイン
+create view total_goals as select 何々
+気をつけるのはカラム名。goalsにしましょう。
+そしたらModel,Controller
+今まで作ってきたような流れで作成します
+んで
+php artisan cache:clear && php artisan config:clear && php artisan route:clear && php artisan view:clear
+composer clear-cache && composer dump-autoload --optimize
+sudo chown -R centos:nginx /var/www/html/yps
+
+エラーが出てlogを出力したかったら
+welcomeController.phpに
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Models\Player;
+use Throwable;
+use Log;
+
+class WelcomeController extends Controller
+{
+    //
+    public const PAGINATE_LIMIT = 10;
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        try {
+            //
+            $players = Player::getWithCountryBySimplePaginate(self::PAGINATE_LIMIT);
+            return view('welcome')->with('players', $players);
+        } catch(Throwable $e) {
+            Log::debug($e->getMessage());
+            abort(500);
+        }
+    }
+}
+
+composer require laravel/ui
+php artisan ui bootstrap
+npm install && npm run dev←ここでエラー出た
+nodejs,npmバージョンアップ
+sudo yum remove node npm -y
+curl -sL https://rpm.nodesource.com/setup_12.x  | sudo bash -
+sudo yum install nodejs -y
+
+はい！！！！以上です！！！
+めっちゃ学んだ！！！！！
+後みんな優しい！！！
+
+
+
+
+</div>
+
+<footer>
+    <div class="orei">
+        <p>最後まで読んでいただきまして <br> 
+            
+        本当にありがとうございます。</p>
+        <p>またよろしくお願いします。</p>
+    </div>
+    <div class="copy-light">
+    <span>©︎ ハマブロ.inc</span>  
+
+    </div>
+
+
+
+</footer>
+
+
+
+
+</body>
+</html>
