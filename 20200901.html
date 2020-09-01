@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>hamablo</title>
+    <link rel="stylesheet" href="my_page.css">
+</head>
+<body>
+    <header>
+<div class="header-logo">
+
+    <h1>はまぶろ</h1>
+    <p>このブログは、僕の家族や友人に向けて書くIT知識向上プログラムです。
+    </p>
+</div>
+<div class="header-list">
+    <ul>
+        <li><a href="index.html">HOME</a></li>
+        <li><a href="kiji.html">記事一覧</a></li>
+        <li><a href="prof.html">プロフィール</a></li>
+
+    </ul>
+    
+</div>
+
+    </header>
+<div class="title">
+<h3><!--ブログのタイトル-->
+yps　phpMyAdmin
+
+
+
+</h3>
+</div>
+<div class="naiyou">
+    <pre>
+<p><!--本文-->
+
+いつものように躓きまくってる僕ですが
+今回も躓きますよーーーー！！！！
+
+はい、いきましょう！！！！！！
+
+php MyAdminはブラウザでDBが操作できる素晴らしいものなのですが、セキュリティーに気をつけないと
+簡単に中身を持っていかれますので注意してね
+
+まずはインストーる
+sudo yum install --enablerepo=remi,remi-php73 phpMyAdmin 
+セキュアにしたいのでディレクトリ名を変える
+sudo mv /usr/share/phpMyAdmin /usr/share/pma 
+ま、これは改名ですね
+続いてシンボリックリンクを貼ります
+sudo ln -s /usr/share/pma/ var/www/html/yps/public/pma 
+sessionディレクトリのオーナーを変更します
+sudo chown nginx:nginx /var/lib/php/session 
+んで再起動
+sudo systemctl restart php-fpm
+sudo systemctl restart nginx
+
+インストール完成！！
+で、こっから表示させます
+sudo vi /etc/nginx/conf.d/default.conf
+<code>
+    server {
+        listen       80;
+        server_name  サーバー名;
+    
+        #charset koi8-r;
+        #access_log  /var/log/nginx/host.access.log  main;
+    
+        location / {
+            #root   /usr/share/nginx/html;
+            #root   /var/www/html/yps/public;
+            #root   /var/www/html/wwpp;
+            root   /var/www/html/yps/public/pma;
+            index  index.php index.html index.htm;
+            try_files $uri $uri/ /index.php?$query_string;
+            location /pma/ {
+                allow 27.136.210.64;
+                deny all;
+            }
+        }
+    
+            location ~ \.php$ {
+            #root   /var/www/html/yps/public;
+            #root   /var/www/html/wwpp;
+            root   /var/www/html/yps/public/pma;
+                    fastcgi_pass   unix:/var/run/php-fpm/php-fpm.sock;
+                    fastcgi_index  index.php;
+                    fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+                    include        fastcgi_params;
+            }
+    
+        location ~* /wp-config.php {
+            deny all;
+        }
+    
+    
+        #error_page  404              /404.html;
+    
+        # redirect server error pages to the static page /50x.html
+        #
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            #root   /usr/share/nginx/html;
+            #root   /var/www/html/yps/public;
+            #root   /var/www/html/wwpp;
+            root   /var/www/html/yps/public/pma;
+        }
+    
+    
+        # proxy the PHP scripts to Apache listening on 127.0.0.1:80
+        #
+        #location ~ \.php$ {
+        #    proxy_pass   http://127.0.0.1;
+        #}
+    
+        # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
+        #
+        #location ~ \.php$ {
+        #    root           html;
+        #    fastcgi_pass   127.0.0.1:9000;
+        #    fastcgi_index  index.php;
+        #    fastcgi_param  SCRIPT_FILENAME  /scripts$fastcgi_script_name;
+        #    include        fastcgi_params;
+        #}
+    
+        # deny access to .htaccess files, if Apache's document root
+        # concurs with nginx's one
+        #
+        #location ~ /\.ht {
+        #    deny  all;
+        #}
+    }
+
+
+</code>
+
+中身はこんな感じ。
+ここで一言！！！！
+
+設定を
+変更するなら
+バックアップしろ
+
+はまお、心の川柳でした
+
+ではまた！！！！
+
+
+
+
+
+
+
+
+</p></pre>
+
+
+</div>
+
+    <footer>
+        <div class="orei">
+            <p>最後まで読んでいただきまして <br> 
+                
+            本当にありがとうございます。</p>
+            <p>またよろしくお願いします。</p>
+        </div>
+        <div class="copy-light">
+        <span>©︎ ハマブロ.inc</span>  
+
+        </div>
+
+
+
+    </footer>
+
+
+
+    
+</body>
+</html>
