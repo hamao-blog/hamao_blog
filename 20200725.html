@@ -44,7 +44,7 @@ yps task2!
 whoami でcentos確認
 sudo yum locelinstall http://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm
 なんか聞かれたらyをおす
-yum install -y mysql -community-serbver
+sudo yum install -y mysql-community-server -y
 このyumってのはパッケージ
 はい、んで
 mysqld --versionと打って
@@ -61,7 +61,7 @@ sudo systemctl stop mysqld
 初期パスワードを取得：
 mysql5.7以降では初回起動時に自動生成されている
 ログの中にあるから探す
-sudo cat /var/log/mysql.log | grep -i root
+sudo cat /var/log/mysqld.log | grep -i root
 このコードが何を意味視しているのかなんとなくですがわかるような気がするw
 んで表示されたなかに
 root@localhost:
@@ -116,7 +116,7 @@ sudo systemctl enable nginx
 
 そしたらブラウザでAWSのセキュリティーグループのインバウンドルール、ポート番号をいれるとこを開いて
 ルールの追加
-httpとhttpsを追加した保存。
+httpとhttpsを追加して保存。
 
 ターミナルに戻って
 sudo systemctl start nginx でnginxを起動
@@ -130,7 +130,7 @@ sudo mkdir /var/www/html
 sudo chown -R centos:nginx /var/www
 
 設定ファイル編集します
-sudo cp /etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf.org
+sudo cp /etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf.org←これはバックアップを取っている
 sudo vi /etc/nginx/conf.d/default.conf
 vi画面で
 server_name はAWSのURL(ec2から始まる)
