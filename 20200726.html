@@ -37,14 +37,15 @@ yps task2 phpなど
 
 PHP7.3のインストールです
 sudo yum install epel-relese
-sudo yum update
-sudo yum -y install --enablerepo=epal,remi,remi-php73 php php-devel php-mbstring php-pdo php-gd php-xml php-mcrypt php-fpm php-mysql php-mysqlnd
+sudo yum install https://rpms.remirepo.net/enterprise/remi-release-7.rpm -y
+sudo yum update -y
+sudo yum -y install --enablerepo=epel,remi,remi-php73 php php-devel php-mbstring php-pdo php-gd php-xml php-mcrypt php-fpm php-mysql php-mysqlnd zip unzip
 
 php-v で　PHP 7.3.20　が表示されればOK
 
 ファイル編集します
 sudo cp /etc/php-fpm.d/www.conf /etc/php-fpm.d/www.conf.org
-sudo vi /etc/php-fpm.d/www.conf
+
 
 で
 
@@ -87,7 +88,7 @@ sudo systemctl start php-fpm
 sudo chown -R centos:nginx /var/www/
 
 以下のファイルを作成
-vi var/www/html/index.php
+sudo vi /var/www/html/index.php
 中にこれを記載
 <?php
 echo phpinfo();
