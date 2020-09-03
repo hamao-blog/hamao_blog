@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>hamablo</title>
+    <link rel="stylesheet" href="my_page.css">
+</head>
+<body>
+    <header>
+<div class="header-logo">
+
+    <h1>はまぶろ</h1>
+    <p>このブログは、僕の家族や友人に向けて書くIT知識向上プログラムです。
+    </p>
+</div>
+<div class="header-list">
+    <ul>
+        <li><a href="index.html">HOME</a></li>
+        <li><a href="kiji.html">記事一覧</a></li>
+        <li><a href="prof.html">プロフィール</a></li>
+
+    </ul>
+    
+</div>
+
+    </header>
+<div class="title">
+<h3><!--ブログのタイトル-->
+AWSのCentOS7,nginxでSSL対応
+Let's　Encrypt
+
+
+</h3>
+</div>
+<div class="naiyou">
+    <pre>
+<p><!--本文-->
+
+今回は暇だったのでサイトを鍵付きにしてみました！
+見た目の利点の割合がかなり大きいので暇ならやってみるのもいいかもね＾＾
+
+では早速いきましょう！！
+
+やることリスト
+・固定IPアドレス取得（ElasticIP)
+・ドメイン取得(お名前.com)
+・Route53の設定
+・ネームサーバー変更
+SSL化
+・certbot導入
+・nginxにドメイン追加
+・certbot実行
+・certbot自動起動設定
+
+まずAWSのIPアドレスを固定しましょう
+ダッシュボードからElasticIPを選択→新しいアドレスの割り当て→割り当て→アクションからアドレスの関連ずけ
+狙いのインスタンスを選択→関連ずけ
+これをやると今まで使っていたIPは開放されるのでログインに使っていたやつも変更する必要がある
+固定IPはめもっとこ
+
+お名前.comでドメイン取得
+これはググればわかりますね。
+AWSに戻ってRoute53を使います
+これは有料です。1ホストゾーンにつき5、60円/月
+ホストゾーン作成→お名前で作ったドメインを入力→作成
+レコードの四行あるNSタイプをメモっとく
+ついでにAタイプも作成
+名前はなし→値に固定IP
+
+お名前.com側でネームサーバーの変更
+メモっといた４つのNSを入力
+これでお名前.comで作ったドメインでAWSにアクセスできるようになる
+ちょっと時間かかるらしい、できたらメール届いた
+
+今度はSSL化
+このサイトがめっちゃわかりやすかった
+https://blog.trippyboy.com/2020/centos/centos7にnginxとcertbotを導入してhttps環境をさくっと作るの巻/
+
+ではcertbotの導入
+epelリポジトリからインストールします
+sudo yum -y install epel-release
+今回は、nginxと連携するので、nginx向けの追加機能を提供する「python2-certbot-nginx」もインストールする。
+sudo yum -y install certbot python2-certbot-nginx
+certbotを用いた証明書の取得と設定
+certbotの導入でインストールした「python2-certbot-nginx」というやつがものすごいやつで、
+なんと、nginxの設定を読み取って、SSL向けの設定を追加してくれるのです。
+
+certbotを用いた証明書の取得を行う際に、自動でnginxの設定がカスタマイズされるようにまずはnginxの初期設定を行っておきます。初期設定といっても、これから取得する証明書に利用するドメインを記載しておくだけです。
+
+nginxの設定にドメイン追加
+/etc/nginx/conf.d/default.confというファイルを編集してドメイン名を設定しておきます。
+sudo vi /etc/nginx/conf.d/default.conf 
+server_name を　お名前.comで取得したドメインに変更します
+
+では実行
+sudo certbot --nginx -d example.com←ここにお名前.comで取ったドメイン
+ファーッと出てきて何やら選択を迫られたら2を押しましたw
+ではdefault.confをみてみましょう
+
+listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/example.com/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/example.com/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+}
+
+server {
+    if ($host = example.com) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    listen       80;
+    server_name  example.com;
+    return 404; # managed by Certbot
+
+
+}
+自動で書いてくれてますね！！！
+便利やわー
+そしたらnginxをリスタート
+sudo systemctl restart nginx
+ブラウザにドメインでアクセスすると鍵マークがついてるはず
+
+続きまして自動起動設定です
+certbotをインストールすると、「certbot-renew.timer」というタイマーユニットが追加されます。
+
+このサービスは定期的に証明書の有効期限を確認して、有効期限が切れそうな場合に証明書を更新してくれるものです。
+一般的にはcronでやるらしい
+certbotにて証明書を更新した後にはnginxの再起動を行わないと証明書の変更が認識されない。
+
+そのため、certbotで証明書が更新された際にはnginxの再起動の再起動を行うように「/etc/sysconfig/certbot」を編集します。
+
+まずは/etc/sysconfig/certbotのバックアップ取得
+sudo cp -p /etc/sysconfig/certbot /etc/sysconfig/certbot.org~
+それから設定ファイルの編集をします。
+sudo vi　/etc/sysconfig/certbot
+29行目あたりに「POST_HOOK=""」という項目があるので、それを編集し「POST_HOOK="--post-hook 'systemctl restart nginx'"」に変更します。
+
+最後に、今まで設定した内容を用いて定期的に証明書の有効期限を確認して必要であれば更新してくれるタイマーユニット「certbot-renew.timer」を有効にしましょう。
+
+タイマーユニットの有効化と実行開始(--now)
+sudo systemctl enable --now certbot-renew.timer
+実行されているか確認
+sudo systemctl list-timers
+以下のような出力になっていればOK
+NEXT                         LEFT     LAST                         PASSED    UNIT                         ACTIVATES
+Fri 2020-02-14 21:50:40 JST  9h left  Fri 2020-02-14 11:54:18 JST  35min ago certbot-renew.timer          certbot-renew.service
+Sat 2020-02-15 12:12:33 JST  23h left Fri 2020-02-14 12:12:33 JST  17min ago systemd-tmpfiles-clean.timer systemd-tmpfiles-clean.service
+
+2 timers listed.
+Pass --all to see loaded but inactive timers, too.
+
+以上です！
+ではまた！！！
+</p></pre>
+
+
+</div>
+
+    <footer>
+        <div class="orei">
+            <p>最後まで読んでいただきまして <br> 
+                
+            本当にありがとうございます。</p>
+            <p>またよろしくお願いします。</p>
+        </div>
+        <div class="copy-light">
+        <span>©︎ ハマブロ.inc</span>  
+
+        </div>
+
+
+
+    </footer>
+
+
+
+    
+</body>
+</html>
