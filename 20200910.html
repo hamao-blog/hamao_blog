@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>hamablo</title>
+    <link rel="stylesheet" href="my_page.css">
+</head>
+<body>
+    <header>
+<div class="header-logo">
+
+    <h1>はまぶろ</h1>
+    <p>このブログは、僕の家族や友人に向けて書くIT知識向上プログラムです。
+    </p>
+</div>
+<div class="header-list">
+    <ul>
+        <li><a href="index.html">HOME</a></li>
+        <li><a href="kiji.html">記事一覧</a></li>
+        <li><a href="prof.html">プロフィール</a></li>
+
+    </ul>
+    
+</div>
+
+    </header>
+<div class="title">
+<h3><!--ブログのタイトル-->
+laravel webアプリ作成 自習
+
+</h3>
+</div>
+<div class="naiyou">
+    <pre>
+<p><!--本文-->
+今回は自分で色々やってみようシリーズ第1話です
+
+実は僕、awsのアカウントもう一つ作って遊んでたんですーーーー！！
+そちらの方は実験用として遊んじゃうよ？←勝手にやれ
+
+ではまずbootstrapを使ったlaravelアプリの開発をしていきたいと思います
+趣味は色々あるんですが、一人でできる遊びならいいけど複数人いないとできなかったり、みんなでやったほうが面白そうなものをやるために
+遊び用のマッチングアプリを作っていきたいと思います。
+最初なので昨日は簡単にします。
+
+・ユーザー登録（メール認証）
+・プロフィール画面
+・募集掲示板
+・書き込みお知らせ機能
+
+こんなもんかな？
+早速やっていきましょう！！！
+えー、まずですね。プロジェクト作りましょうか
+
+・laravelはインストール済みのていで
+
+ディレクトリへ移動します
+cd /var/www/html/
+composer create-project --prefer-dist laravel/laravel asobi "7.*"
+cd asobi
+
+sudo yum remove node npm -y 
+curl -sL https://rpm.nodesource.com/setup_12.x | sudo bash -
+sudo yum install nodejs -y 
+一回バージョン確認
+node -v
+npm -v 
+
+npm install 
+composer requier laravel/ui 
+php artisan ui bootstrap --auth 
+npm install cross-env 
+npm run dev 
+
+エラー出たら
+rm -rf ./nade_modules 
+npm install && npm run dev 
+
+これで土台ができた
+
+ではやっていきましょう！！
+続きは次回！
+ではまた！
+
+あ！もしlaravelのプロジェクト作成の時に
+Updating dependencies (including require-dev)
+強制終了
+とか出たら
+スワップ領域の設定をしましょう
+一回オフにしてオンにする感じ
+
+sudo /sbin/swapoff /var/swap.1
+
+sudo -s /bin/dd if=/dev/zero of=/var/swap.1 bs=1M count=1024
+sudo -s /sbin/mkswap /var/swap.1
+sudo -s /sbin/swapon /var/swap.1
+
+強制終了してもディレクトリはできちゃってるから
+削除してやり直してね！！
+
+じゃ！！
+
+
+
+
+
+
+
+
+
+
+
+</p></pre>
+
+
+</div>
+
+    <footer>
+        <div class="orei">
+            <p>最後まで読んでいただきまして <br> 
+                
+            本当にありがとうございます。</p>
+            <p>またよろしくお願いします。</p>
+        </div>
+        <div class="copy-light">
+        <span>©︎ ハマブロ.inc</span>  
+
+        </div>
+
+
+
+    </footer>
+
+
+
+    
+</body>
+</html>
