@@ -49,7 +49,7 @@ yps task6 Laravel ToDoアプリ
 cd /var/www/html
 composer create-project --prefer-dist laravel/laravel myapp2 "7.*" ←この7、＊ってのはバージョンらしい
 cd myapp2
-composer requier laravel/ui 
+composer require laravel/ui "2.*" ←これはver７の場合エラーが出るから"2.*"に指定してあげる必要がある
 npm install
 php artisan ui bootstrap --auth
 npm install cross-env ←これはcross-envとは
