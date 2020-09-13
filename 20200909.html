@@ -111,7 +111,8 @@ show tables;
 こっからやったこと
 コントローラー作成
 php artisan make:controller TaskController --resource --model=Task
-<code><?php
+<code>
+<?php
 
     namespace App\Http\Controllers;
     
@@ -164,7 +165,8 @@ php artisan make:controller TaskController --resource --model=Task
     
             return redirect()->route('tasks.index')->with('message', 'Task deleted successfully.');
         }
-    }</code>
+    }
+</code>
 ルートの変更
 <code>
 <?php
@@ -180,7 +182,8 @@ viewsのディレクトリを作成
 mkdir resource/views/tasks 
 中にindex,create,show,editのblade.phpを作成
 index.blade.phpの中身
-<code>// resources/views/tasks/index.blade.php
+<code>
+// resources/views/tasks/index.blade.php
     <!DOCTYPE html>
     <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     
@@ -236,7 +239,8 @@ index.blade.phpの中身
       @yield('scripts')
     </body>
     
-    </html></code>
+    </html>
+    </code>
     その他のテンプレートはサイトのgitを確認してコピペ
 
     ここまででだいぶ出来てるけど色々な接続がうまく行ってない
@@ -325,6 +329,13 @@ index.blade.phpの中身
         アプリパスワードを生成
         .envのMAIL_PASSWORDへコピペ
         とりあえずこんなもんだった気がする
+        
+        あとuserモデルのclass User extends Authenticable の後に
+        implements MustVerifyEmailを書く
+        
+        route のweb.phpのAuth::routes(); の中を変更
+        Auth::routes(['verify' => true]);
+        
 
         あ。あとルートの設定
         メール認証されたユーザしかtasks以降を見れない様にするルートの取り方
