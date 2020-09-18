@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>hamablo</title>
+    <link rel="stylesheet" href="my_page.css">
+</head>
+<body>
+    <header>
+<div class="header-logo">
+
+    <h1>はまぶろ</h1>
+    <p>このブログは、僕の家族や友人に向けて書くIT知識向上プログラムです。
+    </p>
+</div>
+<div class="header-list">
+    <ul>
+        <li><a href="index.html">HOME</a></li>
+        <li><a href="kiji.html">記事一覧</a></li>
+        <li><a href="prof.html">プロフィール</a></li>
+
+    </ul>
+    
+</div>
+
+    </header>
+<div class="title">
+<h3><!--ブログのタイトル-->
+swap領域
+
+</h3>
+</div>
+<div class="naiyou">
+    <pre>
+<p><!--本文-->
+今回はlaravelのFormファサードを使いたくて嵌った内容をしるす
+
+まずlaravelにはformファサードというとっても便利な機能があります
+まあよくわかんないけど
+まずcomposerからインストールするのですが
+composer require "laravelcollective/html":"6.*"
+これやるだけ
+が。しかしここではまった
+バージョンが合ってなかったりした
+後、
+mmap() failed: [12] Cannot allocate memory
+
+mmap() failed: [12] Cannot allocate memory
+こんなん出て調べたらどうもメモリ不足ってことらしい
+swap領域を増やしちゃお
+まず確認
+free -m
+swapが0なら
+sudo dd if=/dev/zero of=/swapfile bs=1M count=2048
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+
+ddコマンドで指定サイズの空のファイルを作成
+mkswapで、作成したファイルをスワップ領域として使用できるようにする
+swaponでスワップ領域を有効化
+
+ではまた！
+
+
+
+
+
+</p></pre>
+
+
+</div>
+
+    <footer>
+        <div class="orei">
+            <p>最後まで読んでいただきまして <br> 
+                
+            本当にありがとうございます。</p>
+            <p>またよろしくお願いします。</p>
+        </div>
+        <div class="copy-light">
+        <span>©︎ ハマブロ.inc</span>  
+
+        </div>
+
+
+
+    </footer>
+
+
+
+    
+</body>
+</html>
